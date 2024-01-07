@@ -45,7 +45,7 @@ fetch(url, options)
     }
   });
 
-function showModal(base_url, poster, title, overvier, id_num) {
+function showModal(base_url, poster, title, id_num) {
   let existingModal = document.querySelector(".modal");
   if (existingModal) {
     existingModal.remove();
@@ -101,7 +101,7 @@ function searchHandler() {
               let poster = data["results"][i]["poster_path"];
 
               if (result) {
-                showModal(base_url, poster, title, overview, id_num);
+                showModal(base_url, poster, title, id_num);
               }
             }
           });
@@ -121,7 +121,7 @@ function searchHandler() {
               let poster = data["results"][i]["poster_path"];
 
               if (result) {
-                showModal(base_url, poster, title, overview, id_num);
+                showModal(base_url, poster, title, id_num);
               }
             }
           });
