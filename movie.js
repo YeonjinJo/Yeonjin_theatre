@@ -45,7 +45,7 @@ fetch(url, options)
     }
   });
 
-function showModal(base_url, poster, text, id_num) {
+function showModal(base_url, poster, title, overvier, id_num) {
   let existingModal = document.querySelector(".modal");
   if (existingModal) {
     existingModal.remove();
@@ -61,11 +61,11 @@ function showModal(base_url, poster, text, id_num) {
   image.style.backgroundImage = `url(${base_url}${poster})`;
   image.alt = "Door Image";
 
-  let textElement = document.createElement("p");
-  textElement.textContent = `${id_num} → ${text}`;
+  let textElement1 = document.createElement("p");
+  textElement1.textContent = `${id_num} → ${title}`;
 
   modalContent.appendChild(image);
-  modalContent.appendChild(textElement);
+  modalContent.appendChild(textElement1);
 
   modal.appendChild(modalContent);
   modal.addEventListener("click", () => {
@@ -92,6 +92,8 @@ function searchHandler() {
               let id_num = data["results"][i]["id"];
               let title = data["results"][i]["title"];
               let title_word_array = title.split(" ");
+              let overview = data["results"][i]["overview"];
+              let overview_word_array = overview.split(" ");
               let result = title_word_array.find(function (t) {
                 return t === keyword;
               });
@@ -99,7 +101,7 @@ function searchHandler() {
               let poster = data["results"][i]["poster_path"];
 
               if (result) {
-                showModal(base_url, poster, title, id_num);
+                showModal(base_url, poster, title, overview, id_num);
               }
             }
           });
@@ -119,7 +121,7 @@ function searchHandler() {
               let poster = data["results"][i]["poster_path"];
 
               if (result) {
-                showModal(base_url, poster, title, id_num);
+                showModal(base_url, poster, title, overview, id_num);
               }
             }
           });
