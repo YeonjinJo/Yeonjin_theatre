@@ -7,34 +7,33 @@ const options = {
   },
 };
 
-let url = "https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1";
-let base_url = "https://image.tmdb.org/t/p/w500";
+const url = "https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1";
+const base_url = "https://image.tmdb.org/t/p/w500";
 
 fetch(url, options)
   .then((res) => res.json())
   .then((data) => {
     for (let i = 0; i < data["results"]["length"]; i++) {
       let title = data["results"][i]["title"];
-      let title_word_array = title.split(" ");
 
       let overview = data["results"][i]["overview"];
-      let overview_word_array = overview.split(" ");
+      let overviewWordArray = overview.split(" ");
 
-      if (overview_word_array.length > 40) {
-        let overview_processing = overview.split(" ", 40);
-        str = overview_processing.join(" ");
+      if (overviewWordArray.length > 40) {
+        let overviewProcessing = overview.split(" ", 40);
+        str = overviewProcessing.join(" ");
         overview = str.concat(" (...)");
       }
 
       let poster = data["results"][i]["poster_path"];
-      let vote_rate = data["results"][i]["vote_average"];
+      let voteRate = data["results"][i]["vote_average"];
 
       let temp_html = `
       <div class="content_${i}" id="card_${i}" style="grid-area: d${i};">
         <div class="movie_title">${title}</div>
         <div class="movie_overview">${overview}</div>
-        <div class="movie_title">${vote_rate}</div>
-        <a href="${base_url}${poster}" target="_blank">
+        <div class="movie_title">${voteRate}</div>
+        <a href="info.html">
           <img src="${base_url}${poster}" alt="Poster [${title}]" style="width: 100%;">
         </a>
       </div>
@@ -45,7 +44,7 @@ fetch(url, options)
     }
   });
 
-function showModal(base_url, poster, title, id_num) {
+function showModal(base_url, poster, title, idNum) {
   let existingModal = document.querySelector(".modal");
   if (existingModal) {
     existingModal.remove();
@@ -62,7 +61,7 @@ function showModal(base_url, poster, title, id_num) {
   image.alt = "Door Image";
 
   let textElement1 = document.createElement("p");
-  textElement1.textContent = `${id_num} → ${title}`;
+  textElement1.textContent = `${idNum} → ${title}`;
 
   modalContent.appendChild(image);
   modalContent.appendChild(textElement1);
@@ -77,60 +76,67 @@ function showModal(base_url, poster, title, id_num) {
 }
 
 function searchHandler() {
-  let node_list = document.getElementsByName("search_cond");
+  let node_list = document.getElementsByName("searchCond");
   let keyword = document.getElementById("search_input").value;
-  let search_cond = "empty";
-
+  let searchCond = "empty";
+  
   node_list.forEach((node) => {
     if (node.checked) {
-      search_cond = node.value;
-      if (search_cond === "title") {
+      searchCond = node.value;
+      if (searchCond === "title") {
         fetch(url, options)
           .then((res) => res.json())
           .then((data) => {
+            let checker = false;
+
             for (let i = 0; i < data["results"]["length"]; i++) {
-              let id_num = data["results"][i]["id"];
+              let idNum = data["results"][i]["id"];
               let title = data["results"][i]["title"];
-              let title_word_array = title.split(" ");
-              let overview = data["results"][i]["overview"];
-              let overview_word_array = overview.split(" ");
-              let result = title_word_array.find(function (t) {
+              let titleWordArray = title.split(" ");
+              let result = titleWordArray.find(function (t) {
                 return t === keyword;
               });
 
               let poster = data["results"][i]["poster_path"];
 
               if (result) {
-                showModal(base_url, poster, title, id_num);
-              }
+                showModal(base_url, poster, title, idNum);
+                checker = true;
+              } 
             }
+
+            if (!checker) {alert("검색 결과가 없습니다.");}
           });
-      } else if (search_cond === "content") {
+      } else if (searchCond === "content") {
         fetch(url, options)
           .then((res) => res.json())
           .then((data) => {
+            let checker = false;
+            
             for (let i = 0; i < data["results"]["length"]; i++) {
-              let id_num = data["results"][i]["id"];
+              let idNum = data["results"][i]["id"];
               let title = data["results"][i]["title"];
               let overview = data["results"][i]["overview"];
-              let overview_word_array = overview.split(" ");
-              let result = overview_word_array.find(function (t) {
+              let overviewWordArray = overview.split(" ");
+              let result = overviewWordArray.find(function (t) {
                 return t === keyword;
               });
 
               let poster = data["results"][i]["poster_path"];
 
               if (result) {
-                showModal(base_url, poster, title, id_num);
-              }
+                showModal(base_url, poster, title, idNum);
+                checker = true;
+              } 
             }
+
+            if (!checker) {alert("검색 결과가 없습니다.");}
           });
       }
     }
   });
 
-  if (search_cond === "empty") {
+  if (searchCond === "empty") {
     alert("검색 조건을 선택하세요.");
   }
 }
-
