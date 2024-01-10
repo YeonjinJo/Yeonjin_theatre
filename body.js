@@ -1,15 +1,19 @@
-const toggle_btn = document.querySelector("#toggle_button");
-const toggle_region = document.querySelector(".search");
+const toggleBtn = document.querySelector("#toggle_button");
+const toggleRegion = document.querySelector(".search");
 
 function clickHandler() {
-  const current_status = toggle_region.style.display;
+  const current_status = toggleRegion.style.display;
 
-  if (current_status === 'none') {
-    toggle_region.style.display = 'flex';
-  }
-  else {
-    toggle_region.style.display = 'none';
-  }
+  if (current_status === 'none') {toggleRegion.style.display = 'flex';} 
+  else {toggleRegion.style.display = 'none';}
 }
 
-toggle_btn.addEventListener("click", clickHandler)
+toggleBtn.addEventListener("click", clickHandler)
+
+const searchButton = document.getElementById("search_button");
+searchButton.addEventListener("click", searchHandler);
+
+const searchEnter = document.getElementById("search_input");
+searchEnter.addEventListener("keyup", (event) => {
+  if(event.keyCode === 13) {event.preventDefault(); searchHandler();}
+})
